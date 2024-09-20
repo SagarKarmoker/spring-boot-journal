@@ -2,18 +2,19 @@ package com.sagar.journalapp.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
-@Document(collation = "journal")
+@Document(collation = "journals")
 @Setter
 @Getter
 public class Journal {
     @Id
-    private String id;
+    private ObjectId id; // mongo object
     private String title;
     private String description;
-    private Date publishedDate;
+    private LocalDateTime publishedDate;
 }

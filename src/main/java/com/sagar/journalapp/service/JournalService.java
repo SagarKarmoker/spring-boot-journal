@@ -3,6 +3,7 @@ package com.sagar.journalapp.service;
 import com.sagar.journalapp.entity.Journal;
 import com.sagar.journalapp.repo.JournalEntryRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,8 +19,6 @@ public class JournalService {
     }
 
     public List<Journal> getAllJournals(){
-        journalEntryRepo.findAll();
-        System.out.println(journalEntryRepo.findAll());
         return journalEntryRepo.findAll();
     }
 }
