@@ -27,7 +27,7 @@ public class UserController {
     @PostMapping("add-user")
     public ResponseEntity<?> createUser(@RequestBody User user){
         try{
-           userService.crateUser(user);
+           userService.saveUser(user);
            return new ResponseEntity<>(HttpStatus.CREATED);
         }catch (Exception e){
             log.error(e.getMessage());
@@ -75,7 +75,7 @@ public class UserController {
 
             if(existingUser != null){
                 existingUser.setPassword(user.getPassword());
-                userService.crateUser(existingUser);
+                userService.saveUser(existingUser);
             }
 
             return new ResponseEntity<>(HttpStatus.OK);

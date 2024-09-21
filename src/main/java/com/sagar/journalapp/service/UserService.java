@@ -17,7 +17,7 @@ public class UserService {
     @Autowired
     private UserRepo userRepository;
 
-    public void crateUser(User user) {
+    public void saveUser(User user) {
         userRepository.save(user);
     }
 

@@ -1,7 +1,9 @@
 package com.sagar.journalapp.controller;
 
 import com.sagar.journalapp.entity.Journal;
+import com.sagar.journalapp.entity.User;
 import com.sagar.journalapp.service.JournalService;
+import com.sagar.journalapp.service.UserService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,17 +20,19 @@ public class JournalController {
 
     @Autowired
     private JournalService journalService;
+    @Autowired
+    private UserService userService;
 
     @GetMapping
     public String hello(){
         return "Hello World";
     }
 
-    @PostMapping("create")
-    public ResponseEntity<Journal> createPost(@RequestBody Journal journal){
+    @PostMapping("create/{username}")
+    public ResponseEntity<Journal> createPost(@RequestBody Journal journal, @PathVariable String username){
         try{
             journal.setPublishedDate(LocalDateTime.now());
-            journalService.saveEntry(journal);
+            journalService.saveEntry(journal, username);
 
             if(journal.getId() != null){
                 return new ResponseEntity<>(journal, HttpStatus.CREATED);
@@ -41,11 +45,14 @@ public class JournalController {
         }
     }
 
-    @GetMapping("get-all")
-    public ResponseEntity<?> getAll(){
-        List<Journal> postList = journalService.getAllJournals();
+    @GetMapping("get-all/{username}")
+    public ResponseEntity<?> getAllJournalByUsername(@PathVariable String username){
+        User user = userService.findByUsername(username);
+        List<Journal> postList = user.getJournals();
+        if(postList.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         return new ResponseEntity<>(postList, HttpStatus.OK);
-
     }
 
     // ResponseEntity<?> -> means wildcard entity pass
@@ -59,14 +66,16 @@ public class JournalController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @DeleteMapping("delete/{id}")
-    public ResponseEntity<?> deleteById(ObjectId id){
-        journalService.deleteById(id);
+    @DeleteMapping("delete/{username}/{id}")
+    public ResponseEntity<?> deleteById(@PathVariable ObjectId id, @PathVariable String username){
+        journalService.deleteById(id, username);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PutMapping("update/{id}")
-    public ResponseEntity<?> updateById(@PathVariable ObjectId id, @RequestBody Journal journal){
+    public ResponseEntity<?> updateById(
+            @PathVariable ObjectId id,
+            @RequestBody Journal journal){
         journalService.updateById(id, journal);
         return new ResponseEntity<>(journal, HttpStatus.OK);
     }
