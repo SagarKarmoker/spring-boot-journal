@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 
-@Document(collation = "journals")
+@Document(collection = "journal")
 @Setter
 @Getter
 public class Journal {
